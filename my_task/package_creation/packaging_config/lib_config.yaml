@@ -1,0 +1,146 @@
+# ==============================================================================
+#  lib_config.yaml
+#  Client  : LIB
+#  Show    : wf
+#  Token   : wf_roto
+#
+#  Delivery structure:
+#    {sg_plate_name}/{out_version}/{shot}/
+#      splines/
+#        scripts/
+#          {shot}.{sg_plate_name}.{description}.SPL.{out_version}.nk  ← per description
+#          {shot}.{sg_plate_name}.roto.{out_version}.sfx
+#
+#  Post-render:
+#    ZIP  {shot}.{sg_plate_name}.roto.{out_version}.zip
+#         created from the entire {shot}/ folder, placed at version root
+# ==============================================================================
+
+# ── Show Init Setup ────────────────────────────────────────────────────────────
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+source_path: os.path.basename(source_path)
+sg_plate_name: sg_plate_name
+new_update: yes
+version_padding: 2
+
+# ── App Paths ──────────────────────────────────────────────────────────────────
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# ── File Extensions ────────────────────────────────────────────────────────────
+extensions:
+  nuke: [.nk]
+  silhouette: [.sfx]
+  text: [.txt, .json, .yml, .yaml, .log]
+
+# ── Settings ───────────────────────────────────────────────────────────────────
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+# ==============================================================================
+#  Tokens
+# ==============================================================================
+tokens:
+  wf_roto:
+    # ── Core ──────────────────────────────────────────────────────────────────
+    version_padding: 2
+    out_version: out_version
+    resolution: input_path.split("/")[-2]
+    frame_range: os.path.basename(input_path).split(".")[1]
+    extension: os.path.basename(input_path).split(".")[-1]
+    plate_name: 'source_path.split(".")[0].split("_")[-2].upper()'
+
+    # ── mb_folder_template = "" ───────────────────────────────────────────────
+    # No description-named folder in the structure.
+    # {description} appears ONLY in the nk filename, not as a folder.
+    # "" tells process_paths to map render_folder_dict[description] = src_path
+    # so nuke_shape_export can find it by description key.
+    mb_folder_template: ""
+    mb_nmb: ["MB"] # always uppercase
+
+    # ── Nuke file template ────────────────────────────────────────────────────
+    # One .nk per description (matteA, matteB …) placed in splines/scripts/
+    mb_nuke_file_template: "{shot}.{sg_plate_name}.{description}.SPL.{out_version}.nk"
+
+    # ── Path where nk files land ──────────────────────────────────────────────
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}/splines/
+
+    # ── Extend paths — both nk and sfx go into splines/scripts/ ──────────────
+    nuke_extend_path: ["splines"]
+    silhouette_extend_path: ["splines"]
+    matte_extend_path: [] # no mattes folder in this show
+
+    # ── Base path ─────────────────────────────────────────────────────────────
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}/"
+
+    # ── Silhouette file destination ───────────────────────────────────────────
+    # Matches project_structure: splines/scripts/
+    dst_path_sx: /{sg_plate_name}/{out_version}/{shot}/splines/{shot}.{sg_plate_name}.roto.{out_version}.sfx
+
+    # ── Nuke overlay file destination ────────────────────────────────────────
+    # Also in splines/scripts/ — no separate nuke/ folder for this show
+    nuke_color_overlay_file: /{sg_plate_name}/{out_version}/{shot}/splines/{shot}.{sg_plate_name}.roto.{out_version}.nk
+
+    # ── Coloroverlay template ─────────────────────────────────────────────────
+    nuke_coloroverlay_template: /tools/bpipe/config/coloroverlay_template/nuke_color_overlay.nk
+
+    # ── Write / EXR paths ─────────────────────────────────────────────────────
+    write_node_path: /{sg_plate_name}/{out_version}/{shot}/{shot}_basilicflyroto_{plate_name}_differenceoverlay_{out_version}/{shot}_basilicflyroto_{plate_name}_differenceoverlay_{out_version}.%04d.exr
+    exr_path: /{sg_plate_name}/{out_version}/{shot}/splines/
+
+    # ── Zip output ────────────────────────────────────────────────────────────
+    # Full path for the zip file created after all render tasks complete.
+    # Zips the entire {shot}/ folder at version root.
+    zip_full_path: /{sg_plate_name}/{out_version}/{shot}.{sg_plate_name}.roto.{out_version}.zip
+    # Source folder to zip — everything under {shot}/
+    zip_source_folder: /{sg_plate_name}/{out_version}/{shot}/
+
+    # matte_naming_convention — not used for this show (no matte copy task)
+    matte_naming_convention: ""
+
+    # ── Render tasks — order matters, create_zip always LAST ──────────────────
+    render:
+      nuke_shape_export:
+        "key":
+          ["MB"] # MB → uses mb_nuke_path[description] = correct per-description .nk
+          # MB_BKP → uses tmp backup path = WRONG for this show
+      sfx_file_copy:
+        "key": []
+      create_version_data:
+        "key": []
+      create_zip:
+        "key": []
+
+    # ── Nuke template context ─────────────────────────────────────────────────
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+# ==============================================================================
+#  Project Structure
+#
+#  {description} expands into actual group names (matteA, matteB …)
+#  inside the nk filename only — NOT as a folder.
+# ==============================================================================
+project_structure:
+  - lib:
+      - wf:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}":
+                      - "{shot}":
+                          - "splines":
+                              # one .nk per description, expanded at runtime
+                              - "{shot}.{sg_plate_name}.{description}.SPL.{out_version}.nk"
+                              # single sfx — no description suffix
+                              - "{shot}.{sg_plate_name}.roto.{out_version}.sfx"

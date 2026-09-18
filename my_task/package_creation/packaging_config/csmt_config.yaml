@@ -1,0 +1,353 @@
+##################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+sg_plate_name: sg_plate_name #01
+
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+source_path: os.path.basename(source_path)
+new_update: yes
+nuke_version_path: "/apps/nuke/Nuke15.0v4/Nuke15.0"
+version_padding: 3
+default_version_padding: 4
+
+##################################################### FT B_cart creative tool path setup #######################################
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke:
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+###################################################### Tokens ###################################################################
+
+tokens:
+  mum_roto:
+    nuke_extend_path: ["scripts"]
+    silhouette_extend_path: ["scripts"]
+    matte_extend_path: []
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}_CSMT_BFS_OS_roto_001/scripts/
+    out_version: out_version
+    resolution: input_path.split("/")[-2]
+    frame_range: os.path.basename(input_path).split(".")[1]
+    extension: os.path.basename(input_path).split(".")[-1]
+    plate_name: source_path.split(".")[0].split("_")[-2].upper()
+    exr_file_name: os.path.basename(input_path)
+    nuke_file_name: "{shot}__{shot}__{sg_plate_name}__roto__{out_version}.nk"
+    # mb_folder_template : "matteimage_{shot}_roto_roto_default_{sg_plate_name}{description}_primary_{out_version}_main"
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_CSMT_BFS_OS_roto_001/" #02
+    mb_nuke_file_template: "{shot}__{shot}__{sg_plate_name}__roto__{out_version}.nk"
+    exr_path: /{sg_plate_name}/{out_version}/{shot}_CSMT_BFS_OS_roto_001/{shot}__{shot}__{sg_plate_name}__roto__{out_version}/{shot}__{shot}__{sg_plate_name}__roto__{out_version}.%04d.exr
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_mum.nk"
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/{shot}_CSMT_BFS_OS_roto_001/scripts/{shot}__{shot}__{sg_plate_name}__roto__{out_version}.nk"
+    mb_nmb: ["MB"]
+    input_template_mov: "/tools/oou_comptest_colourloop_1_v001.nk"
+    dst_path_sx: /{sg_plate_name}/{out_version}/{shot}_CSMT_BFS_OS_roto_001/scripts/{shot}__{shot}__{sg_plate_name}__roto__v001.sfx #03
+    write_node_path: /{sg_plate_name}/{out_version}/{shot}_CSMT_BFS_OS_roto_001/{shot}__{shot}__{sg_plate_name}__roto__{out_version}/{shot}__{shot}__{sg_plate_name}__roto__{out_version}.%04d.exr
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      sfx_file_copy:
+        "key": []
+
+      nuke_multiple_shape_export:
+        "key": []
+
+      set_value_nkt:
+        "key": []
+
+      set_value_nkt_sequence:
+        key: []
+        templates:
+          - input_template_path: "/tools/bpipe/config/coloroverlay_template/csmt_slate_matte.nk"
+            name: "roto_package_one"
+
+      save_tmp_coloroverlay:
+        "key": []
+
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  subv_roto:
+    shot: shot.upper()
+    date_folder: (date_folder.split("_")[1])
+    nuke_extend_path: ["scripts"]
+    silhouette_extend_path: ["scripts"]
+    matte_extend_path: []
+    shot_double_underscore: ("_".join([*shot.rsplit("_", 1)[:-1], "_" + shot.rsplit("_", 1)[-1]]))
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/scripts/
+    out_version: out_version
+    default_out_verison: ("v" + str(int(out_version[1:])).zfill(4))
+    resolution: input_path.split("/")[-2]
+    frame_range: os.path.basename(input_path).split(".")[1]
+    extension: os.path.basename(input_path).split(".")[-1]
+    plate_name: source_path.split(".")[0].split("_")[-2].upper()
+    exr_file_name: os.path.basename(input_path)
+    nuke_file_name: "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+    # 143_PVD__4625__143_PVD_4625_bg01_v0001_denoise__roto__v001
+    mb_folder_template: "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}"
+    project_base_path: "/{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/" #02
+    mb_nuke_file_template: "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+    exr_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.%04d.exr
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_csmt_subv.nk"
+    nuke_global_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_csmt_subv_global.nk"
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}__scripts/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+    mb_nmb: ["MB"]
+    input_template_mov: "/tools/oou_comptest_colourloop_1_v001.nk"
+    dst_path_sx: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}__scripts/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.sfx #03
+    write_node_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.%04d.exr
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      sfx_file_copy:
+        "key": []
+
+      nuke_multiple_shape_export:
+        key: []
+        export_mode: "layer" # layer | node
+
+      shape_layer_wise_render:
+        "key": []
+
+      set_value_nkt:
+        "key": []
+        use_packed: true
+
+      set_value_nkt_sequence:
+        key: []
+        templates:
+          - input_template_path: "/tools/bpipe/config/coloroverlay_template/csmt_slate_matte.nk"
+            name: "roto_package_one"
+
+      save_tmp_coloroverlay:
+        "key": []
+
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  g63_roto:
+    shot: shot.upper()
+    date_folder: (date_folder.split("_")[1])
+    nuke_extend_path: ["scripts"]
+    silhouette_extend_path: ["scripts"]
+    matte_extend_path: []
+    shot_double_underscore: ("_".join([*shot.rsplit("_", 1)[:-1], "_" + shot.rsplit("_", 1)[-1]]))
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/scripts/
+    out_version: out_version
+    default_out_verison: ("v" + str(int(out_version[1:])).zfill(4))
+    resolution: input_path.split("/")[-2]
+    frame_range: os.path.basename(input_path).split(".")[1]
+    extension: os.path.basename(input_path).split(".")[-1]
+    plate_name: source_path.split(".")[0].split("_")[-2].upper()
+    exr_file_name: os.path.basename(input_path)
+    nuke_file_name: "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+    # 143_PVD__4625__143_PVD_4625_bg01_v0001_denoise__roto__v001
+    mb_folder_template: "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}"
+    project_base_path: "/{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/" #02
+    mb_nuke_file_template: "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+    exr_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.%04d.exr
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_csmt_subv.nk"
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}__scripts/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+    mb_nmb: ["MB"]
+    input_template_mov: "/tools/oou_comptest_colourloop_1_v001.nk"
+    dst_path_sx: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}__scripts/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.sfx #03
+    write_node_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_SUBV_BFLY_OS_roto_001/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}/{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.%04d.exr
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      sfx_file_copy:
+        "key": []
+
+      nuke_multiple_shape_export:
+        key: []
+        export_mode: "layer" # layer | node
+
+      shape_layer_wise_render:
+        "key": []
+
+      set_value_nkt:
+        "key": []
+        use_packed: true
+
+      set_value_nkt_sequence:
+        key: []
+        templates:
+          - input_template_path: "/tools/bpipe/config/coloroverlay_template/csmt_slate_matte.nk"
+            name: "roto_package_one"
+
+      save_tmp_coloroverlay:
+        "key": []
+
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  # ===========================================================================
+  # FLX  –  CSMT VFX Outsource Roto Delivery Specs v013 (ROTO ONLY)
+  # Project: csmt_flx  →  client=csmt, show=flx, tokens key=flx_roto
+  #
+  # Package:
+  #   [LOCATION]_[YYYYMMDD]_[SHOWCODE]_[VENDORCODE]_OS_roto_[UPLOAD_NO]
+  #   e.g. LDN_20231231_FLX_BFS_OS_roto_001
+  #
+  # Version / EXR:
+  #   [SEQUENCE]__[SHOT]__[PLATE_LABEL]__roto__[VERSION]
+  #   [SEQUENCE]__[SHOT]__[PLATE_LABEL]__roto__[VERSION].####.exr
+  #   e.g. 102_044__0200__CIN_102_044_0200__roto__v001
+  #
+  # Scripts:
+  #   [SEQUENCE]__[SHOT]__[PLATE_LABEL]__roto__[VERSION]__scripts/
+  #     ...roto__v001.nk
+  #     ...roto__v001.sfx
+  #
+  # Rules:
+  #   - task = roto
+  #   - version = 3-digit (v001)
+  #   - frame pad = 4-digit
+  #   - double underscores between SEQUENCE / SHOT / PLATE_LABEL / TASK / VERSION
+  #   - motion blur ON only (no separate NMB)
+  #   - plate_label = CSMT plate label only (do not append CSMT plate version)
+  # ===========================================================================
+  flx_roto:
+    shot: shot.upper()
+    date_folder: (date_folder.split("_")[1])
+    # scripts live in VERSION__scripts (not a plain "scripts" folder)
+    nuke_extend_path: ["{shot_double_underscore}__roto__{out_version}__scripts"]
+    silhouette_extend_path:
+      ["{shot_double_underscore}__roto__{out_version}__scripts"]
+    matte_extend_path: []
+    # SEQUENCE__SHOT  (e.g. 102_044_0200 -> 102_044__0200)
+    # shot_double_underscore: ("_".join([*shot.rsplit("_", 1)[:-1], "_" + shot.rsplit("_", 1)[-1]]))
+    plate_name: source_path.split(".")[0].split("_")[-2].upper()
+    shot_double_underscore: source_path.rsplit("__v", 1)[0]
+    out_version: out_version
+    default_out_verison: ("v" + str(int(out_version[1:])).zfill(4))
+    resolution: input_path.split("/")[-2]
+    frame_range: os.path.basename(input_path).split(".")[1]
+    extension: os.path.basename(input_path).split(".")[-1]
+    exr_file_name: os.path.basename(input_path)
+    # SEQUENCE__SHOT__PLATE_LABEL__roto__VERSION
+    nuke_file_name: "{shot_double_underscore}__roto__{out_version}.nk"
+    mb_folder_template: "{shot_double_underscore}__roto__{out_version}"
+    project_base_path: "/{sg_plate_name}/{out_version}/LDN_{date_folder}_FLX_BFS_OS_roto_001/" #02
+    mb_nuke_file_template: "{shot_double_underscore}__roto__{out_version}.nk"
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_FLX_BFS_OS_roto_001/{shot_double_underscore}__roto__{out_version}__scripts/
+    exr_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_FLX_BFS_OS_roto_001/{shot_double_underscore}__roto__{out_version}/{shot_double_underscore}__roto__{out_version}.%04d.exr
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_csmt_subv.nk"
+    nuke_global_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_csmt_subv_global.nk"
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/LDN_{date_folder}_FLX_BFS_OS_roto_001/{shot_double_underscore}__roto__{out_version}__scripts/{shot_double_underscore}__roto__{out_version}.nk"
+    # Roto: motion blur ON only – no separate NMB deliverable
+    mb_nmb: ["MB"]
+    input_template_mov: "/tools/oou_comptest_colourloop_1_v001.nk"
+    dst_path_sx: /{sg_plate_name}/{out_version}/LDN_{date_folder}_FLX_BFS_OS_roto_001/{shot_double_underscore}__roto__{out_version}__scripts/{shot_double_underscore}__roto__{out_version}.sfx #03
+    write_node_path: /{sg_plate_name}/{out_version}/LDN_{date_folder}_FLX_BFS_OS_roto_001/{shot_double_underscore}__roto__{out_version}/{shot_double_underscore}__roto__{out_version}.%04d.exr
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      sfx_file_copy:
+        "key": []
+
+      nuke_multiple_shape_export:
+        key: []
+        export_mode: "layer" # layer | node
+
+      shape_layer_wise_render:
+        "key": []
+
+      set_value_nkt:
+        "key": []
+        use_packed: true
+
+      set_value_nkt_sequence:
+        key: []
+        templates:
+          - input_template_path: "/tools/bpipe/config/coloroverlay_template/csmt_slate_matte.nk"
+            name: "roto_package_one"
+
+      save_tmp_coloroverlay:
+        "key": []
+
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+################################################### folder Structure ############################################################
+
+project_structure:
+  - csmt:
+      - mum:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}": #04
+                      - "{shot}_CSMT_BFS_OS_roto_001":
+                          - "{shot}__{shot}__{sg_plate_name}__roto__{out_version}":
+                              []
+                          - "scripts":
+                              - "{shot}__{shot}__{sg_plate_name}__roto__{out_version}.nk"
+                              - "{shot}__{shot}__{sg_plate_name}__roto__v001.sfx"
+
+      - subv:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}": #04
+                      - "LDN_{date_folder}_SUBV_BFLY_OS_roto_001":
+                          - "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}__scripts":
+                              - "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+                              - "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.sfx"
+
+      - g63:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}": #04
+                      - "LDN_{date_folder}_SUBV_BFLY_OS_roto_001":
+                          - "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}__scripts":
+                              - "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.nk"
+                              - "{shot_double_underscore}__{shot}_{sg_plate_name}_denoise__roto__{out_version}.sfx"
+
+      # FLX – CSMT Outsource Roto Delivery Specs v013
+      # Package: LDN_{YYYYMMDD}_FLX_BFS_OS_roto_001
+      # Version: SEQUENCE__SHOT__PLATE_LABEL__roto__VERSION
+      - flx:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}": #04
+                      - "LDN_{date_folder}_FLX_BFS_OS_roto_001":
+                          - "{shot_double_underscore}__roto__{out_version}": []
+                          - "{shot_double_underscore}__roto__{out_version}__scripts":
+                              - "{shot_double_underscore}__roto__{out_version}.nk"
+                              - "{shot_double_underscore}__roto__{out_version}.sfx"

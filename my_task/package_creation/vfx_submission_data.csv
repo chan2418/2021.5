@@ -1,0 +1,4 @@
+Submission Date,VFX Facility,Sequence,Shot,Task Type,Task Name,Version,Overscan Resolution,Submission For  (brief succinct description),VFX Vendor Notes
+2025-08-06,Deluxe,SEQ_010,SH_020,Compositing,Comp_v01,v1,2048x1152,Temp Comp Submission,Includes CC and cube updates
+2025-08-06,Framestore,SEQ_020,SH_015,Lighting,Light_v03,v3,1920x1080,Final Lighting Submission,All AOVs included
+2025-08-06,MPC,SEQ_030,SH_050,Tracking,Track_v02,v2,2048x858,Tracking pass for Matchmove,

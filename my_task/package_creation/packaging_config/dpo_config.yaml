@@ -1,0 +1,64 @@
+##################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('/in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('/dept')[0],'dept','upload',department,)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('/in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+
+##################################################### nfx B_cart creative tool path setup #######################################
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke:
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+###################################################### Tokens ###################################################################
+
+tokens:
+  nh_roto:
+    name: os.path.basename(input_path)
+    extension: name.split(".")[-1]
+    shot_dir_parts: name.split(".")[0].split('_')
+    shot_dir: shot_dir_parts[0]+"_"+shot_dir_parts[1]+"_"+shot_dir_parts[2]+"_"+shot_dir_parts[3]
+    exr_path: "os.path.join(out_path,scan_plate,out_version,shot_dir+'_'+out_version,shot_dir+'_matte_'+out_version,shot_dir+'_matte_'+out_version+'.%04d.'+extension)"
+    sg_version_name: shot_dir+'_matte_'+out_version
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      copying_render_files:
+        src_path: "{final_render_path}"
+        dst_path: "{exr_path}"
+      creating_sg_version:
+        dest_file: "{sg_version_name}"
+        exr_path: "{exr_path}"
+        write_node_type: Package
+
+################################################### folder Structure ############################################################
+project_structure:
+  - dpo:
+      - nh:
+          - roto:
+              - "{scan_plate}":
+                  - "{out_version}":
+                      - "{shot_dir}_{out_version}":
+                          - "{shot_dir}_matte_{out_version}": []

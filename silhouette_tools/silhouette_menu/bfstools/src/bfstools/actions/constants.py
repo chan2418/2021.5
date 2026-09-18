@@ -1,0 +1,12 @@
+# Menu label strings (padded for Silhouette alignment)
+LABEL_REVIEW = "Review Output Node"
+LABEL_PUBLISH_NODE = "Publish Output Node"
+LABEL_SAVE = "Save AS Next Version"
+LABEL_PUBLISH = "Publish"
+LABEL_MY_TASK = "My Task"
+LABEL_BPACKAGE = "BPackage"
+LABEL_SYNC_FRAME = "Sync Task Frame"
+LABEL_MY_TASK_SYNC = "My Task_sync"
+LABEL_STAGING = "Staging BPackage"
+LABEL_RENAMER = "Layer Renamer"
+LABEL_DEBUGGER = "debugger Server"

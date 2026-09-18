@@ -1,0 +1,93 @@
+#################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path : "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index : 10
+sg_status_list : "pentec"
+source_path : source_path
+sg_plate_name : sg_plate_name #01
+
+
+##################################################### MOD B_cart creative tool path setup #######################################
+
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke: 
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+
+
+###################################################### Tokens ###################################################################
+
+tokens:
+
+  woz_roto:
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name : next((s[i:i+4] for s in reversed(source_path.split('_')) for i in reversed(range(len(s)-3)) if s[i:i+2].isalpha() and s[i+2:i+4].isdigit()), None)
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_plate_{plate_name}_{out_version}/" #02
+    exr_path : "/{sg_plate_name}/{out_version}/{shot}_plate_{plate_name}_{out_version}/{shot}_roto_{plate_name}_dn_overlay_{out_version}/{shot}_roto_{plate_name}_dn_overlay_{out_version}.%04d.exr" #02
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/nuke_mate_snippet_mod.nk"}
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_mod.nk"
+    mb_nmb: []
+    # nuke_color_overlay_file : "os.path.join(out_path,sg_plate_name+out_version,shot+'_plate_'+plate_name+'_'+out_version,'nuke',shot+'_roto_main_'+out_version+'.nk')" #06
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_dn_{out_version}/{shot}_roto_{plate_name}_dn_{out_version}.nk #04
+    write_node_path : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_dn_{out_version}/{shot}_roto_{plate_name}_dn_overlay_{out_version}/{shot}_roto_{plate_name}_dn_overlay_{out_version}.%04d.exr #04
+    write_node_grey : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_dn_{out_version}/{shot}_roto_{plate_name}_dn_grey_{out_version}/{shot}_roto_{plate_name}_dn_grey_{out_version}.%04d.exr #04
+    write_node_db : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_dn_{out_version}/{shot}_roto_{plate_name}_dn_grey_{out_version}/{shot}_roto_{plate_name}_dn_grey_{out_version}.%04d.exr #04
+    # write_node_path : "os.path.join(out_path,sg_plate_name+out_version,shot+'_plate_'+plate_name+'_'+out_version,shot+'_plate_'+plate_name+'_roto_rotomain01_'+out_version,shot+'_plate_'+plate_name+'_roto_rotomain01_'+out_version+'.%04d.exr')"
+    render_list:
+      exr_file_path : "{exr_path}"
+    render :
+      # sfx_file_copy:
+      #   "key": [] #05
+        # "dst_sfx_path": "/{sg_plate_name}{out_version}/{shot}_plate_{plate_name}_{out_version}/silhoutte/{shot}_roto_main_{out_version}.sfx"
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      set_value_nkt:
+        "key": []
+      save_tmp_coloroverlay:
+        "key": []
+      create_version_data:
+        "key": []
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+################################################### folder Structure ############################################################
+project_structure:
+
+  - mod:
+    - woz:
+      - roto:                                          
+        - "{sg_plate_name}":
+          - "{out_version}": #04
+            - "{shot}_roto_{plate_name}_dn_{out_version}":
+              - "{shot}_roto_{plate_name}_dn_grey_{out_version}": []
+              - "{shot}_roto_{plate_name}_dn_overlay_{out_version}": []
+              - "{shot}_roto_{plate_name}_dn_{out_version}": []
+              - "{shot}_roto_{plate_name}_dn_{out_version}.nk"

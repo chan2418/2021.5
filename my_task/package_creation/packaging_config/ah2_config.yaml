@@ -1,0 +1,138 @@
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+sg_plate_name: sg_plate_name #01
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+source_path: source_path
+plate_name: ""
+new_update: yes
+matte_path_changes: yes
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+extensions:
+  nuke: [.nk]
+  silhouette: [.sfx]
+  text: [.txt, .json, .yml, .yaml, .log]
+
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+tokens:
+  hnd2_roto:
+    shot: shot.upper()
+    out_version: out_version
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    # user_input_plate: next((s[i:i+4] for s in reversed(source_path.split('_')) for i in reversed(range(len(s)-3)) if s[i:i+2].isalpha() and s[i+2:i+4].isdigit()), None)
+
+    mb_nmb: ["MB", "NMB"]
+    project_base_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/"
+
+    # ── only dst needed, src comes from artist UI selection ──────────────────
+    # mb_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/exr/mb/{shot}_plate_{user_input_plate}_roto_{description}_mb_{out_version}.%04d.exr"
+    # nmb_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/exr/nmb/{shot}_plate_{user_input_plate}_roto_{description}_nmb_{out_version}.%04d.exr"
+    nmb_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/exr/nmb/{shot}_plate_{user_input_plate}_roto_{description}_nmb_{out_version}"
+    mb_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/exr/mb/{shot}_plate_{user_input_plate}_roto_{description}_mb_{out_version}.%04d.exr"
+    nmb_folder_template: ""
+    user_input_plate: user_input_plate
+
+    sg_register_plate_name: "{shot}_roto"
+    write_node_path: /{shot}_roto/{out_version}/{shot}_roto_{description}/exr/mb/{shot}_plate_{user_input_plate}_roto_{description}_{out_version}.%04d.exr
+    exr_path: /{shot}_roto/{out_version}/
+
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay.nk"
+    nuke_color_overlay_file: /{shot}_roto/{out_version}/{shot}_roto_{description}/{shot}_plate_{user_input_plate}_roto_{out_version}.nk
+    layer_shape_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/{shot}_plate_{user_input_plate}_roto_{out_version}.nk"
+
+    nuke_full_shpae_path: /{shot}_roto/{out_version}/{shot}_roto_{description}/
+    mb_nuke_file_template: "{shot}_plate_{user_input_plate}_roto_{out_version}.nk"
+
+    new_update: yes
+    matte_path_changes: yes
+
+    render:
+      run_mb_copy:
+        "key": []
+      run_nmb_render:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB"]
+      create_version_data:
+        "key": []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  grts_roto:
+    shot: shot.upper()
+    out_version: out_version
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+
+    mb_nmb: ["MB", "NMB"]
+    project_base_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/"
+
+    nmb_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/exr/nmb/{shot}_plate_{user_input_plate}_roto_{description}_nmb_{out_version}"
+    mb_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/exr/mb/{shot}_plate_{user_input_plate}_roto_{description}_mb_{out_version}.%04d.exr"
+    nmb_folder_template: ""
+    user_input_plate: user_input_plate
+
+    sg_register_plate_name: "{shot}_roto"
+    write_node_path: /{shot}_roto/{out_version}/{shot}_roto_{description}/exr/mb/{shot}_plate_{user_input_plate}_roto_{description}_{out_version}.%04d.exr
+    exr_path: /{shot}_roto/{out_version}/
+
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay.nk"
+    nuke_color_overlay_file: /{shot}_roto/{out_version}/{shot}_roto_{description}/{shot}_plate_{user_input_plate}_roto_{out_version}.nk
+    layer_shape_dst_path: "/{shot}_roto/{out_version}/{shot}_roto_{description}/{shot}_plate_{user_input_plate}_roto_{out_version}.nk"
+
+    nuke_full_shpae_path: /{shot}_roto/{out_version}/{shot}_roto_{description}/
+    mb_nuke_file_template: "{shot}_plate_{user_input_plate}_roto_{out_version}.nk"
+
+    new_update: yes
+    matte_path_changes: yes
+
+    render:
+      run_mb_copy:
+        "key": []
+      run_nmb_render:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB"]
+      create_version_data:
+        "key": []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+project_structure:
+  - ah2:
+      - hnd2:
+          - roto:
+              - "{shot}_roto":
+                  - "{out_version}":
+                      - "{shot}_roto_{description}":
+                          - exr:
+                              - mb: []
+                              - nmb: []
+                          - "{shot}_plate_{user_input_plate}_roto_{out_version}.nk"
+      - grts:
+          - roto:
+              - "{shot}_roto":
+                  - "{out_version}":
+                      - "{shot}_roto_{description}":
+                          - exr:
+                              - mb: []
+                              - nmb: []
+                          - "{shot}_plate_{user_input_plate}_roto_{out_version}.nk"

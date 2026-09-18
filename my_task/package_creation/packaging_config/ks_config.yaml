@@ -1,0 +1,116 @@
+#################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+source_path: source_path
+sg_plate_name: sg_plate_name #01
+plate_name: ""
+new_update: yes
+matte_path_changes: yes
+
+##################################################### KS B_cart creative tool path setup #######################################
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke:
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+###################################################### Tokens ###################################################################
+
+tokens:
+  tac_roto:
+    shot: shot.upper()
+    out_version: ("v" + out_version.replace("v", ""))
+    plate_version: ("v" + os.path.basename(source_path).split(".")[2].replace("v", "").zfill(3))
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    plate_name: next((s[i:i+4] for s in reversed(source_path.split('_')) for i in reversed(range(len(s)-3)) if s[i:i+2].isalpha() and s[i+2:i+4].isdigit()), None)
+
+    # Base folder path: /{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_main_{out_version}/
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_main_{out_version}/" #02
+
+    # EXR delivery path (Multi-part EXR rendered into Exr/ directory)
+    exr_path: "/{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_main_{out_version}/Exr/{shot}_{sg_plate_name}_roto_main_{out_version}.%04d.exr" #04
+    write_node_path: "/{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_main_{out_version}/Exr/{shot}_{sg_plate_name}_roto_main_{out_version}.%04d.exr" #04
+
+    # Nuke template used to render the multipart EXR sequence
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_coloroverlay_ks.nk"
+
+    # Client deliverables in Nuke/ folder: Roto Shape .nk and .sfx workfiles
+    nuke_file_name: "{shot}_{sg_plate_name}_roto_main_{out_version}.nk"
+    # mb_nuke_file_template: "{shot}_{sg_plate_name}_roto_main_{out_version}.nk"
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_main_{out_version}/Nuke/{shot}_{sg_plate_name}_roto_main_{out_version}.nk" #04
+    dst_path_sx: "/{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_main_{out_version}/Nuke/{shot}_{sg_plate_name}_roto_main_{out_version}.sfx" #03
+
+    mb_folder_template: ""
+
+    # NMB (Non-Motion Blur) token setup (stores temporary NMB renders for composite into multipart EXR)
+    nmb_extend_path: ["{out_version}", "matte_renders_nmb", "{description}"]
+    nmb_project_base_path: "/projects/{client}_{show}/{shot}/dept/roto/{user_name}/.nmb/"
+    nmb_folder_template: ""
+
+    mb_nmb: ["MB", "NMB"]
+
+    matte_path_split:
+      file_name: "file_name.split('_')[-2]"
+
+    render_list:
+      exr_file_path: "{exr_path}"
+
+    render:
+      render_nmb_token_driven:
+        "key": ["NMB"]
+      sfx_file_copy:
+        "key": []
+      nuke_multiple_shape_export:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      set_value_nkt:
+        "key": []
+      save_tmp_coloroverlay:
+        "key": []
+      create_version_data:
+        "key": []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+################################################### Folder Structure ############################################################
+
+project_structure:
+  - ks:
+      - tac:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}":
+                      - "{shot}_{sg_plate_name}_roto_main_{out_version}":
+                          - Exr: []
+                          - Nuke:
+                              - "{shot}_{sg_plate_name}_roto_main_{out_version}.nk"
+                              - "{shot}_{sg_plate_name}_roto_main_{out_version}.sfx"

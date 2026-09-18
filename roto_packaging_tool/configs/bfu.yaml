@@ -1,0 +1,48 @@
+show: bfu
+
+tokens:
+  common:
+    shot: "{shot}"
+    sg_plate_name: "{sg_plate_name}"
+    plate_name: "{plate_name}"
+    out_version: "{out_version}"
+    plate_version: "{plate_version}"
+
+cases:
+  wam:
+    roto:
+      exr_path: "{sg_plate_name}/{out_version}/{shot}_{plate_name}_{out_version}/{shot}_{plate_name}_roto_rotomain01_{out_version}/{shot}_{plate_name}_roto_rotomain01_{out_version}.%04d.exr"
+      nuke_file: "{sg_plate_name}/{out_version}/{shot}_plate_{plate_name}_{out_version}/nuke/{shot}_roto_main_{out_version}.nk"
+      sfx_file: "{sg_plate_name}/{out_version}/{shot}_plate_{plate_name}_{out_version}/silhouette/{shot}_roto_main_{out_version}.sfx"
+      folders:
+        - "{sg_plate_name}"
+        - "{out_version}"
+        - "{shot}_plate_{plate_name}_{out_version}"
+        - "{shot}_plate_{plate_name}_roto_rotomain01_{out_version}"
+        - nuke
+        - silhouette
+
+  sos:
+    roto:
+      exr_path: "{sg_plate_name}/{out_version}/{shot}_{plate_name}_{plate_version}/{shot}_{plate_name}_roto_rotomain01_{out_version}/{shot}_{plate_name}_roto_rotomain01_{out_version}.%04d.exr"
+      nuke_file: "{sg_plate_name}/{out_version}/{shot}_{plate_name}_{plate_version}/nuke/{shot}_roto_main_{plate_version}.nk"
+      sfx_file: "{sg_plate_name}/{out_version}/{shot}_{plate_name}_{plate_version}/silhouette/{shot}_roto_main_{plate_version}.sfx"
+      folders:
+        - "{sg_plate_name}"
+        - "{out_version}"
+        - "{shot}_{plate_name}_{plate_version}"
+        - "{shot}_{plate_name}_roto_rotomain01_{out_version}"
+        - nuke
+        - silhouette
+
+  mro:
+    roto:
+      exr_path: "{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}-outsource_{plate_version}/{shot}_roto_{plate_name}-outsource_{plate_version}/{shot}_roto_{plate_name}-outsource_{plate_version}.%04d.exr"
+      nuke_file: "{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}-outsource_{plate_version}/nuke/{shot}_roto_{plate_name}-outsource_{plate_version}.nk"
+      sfx_file: "{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}-outsource_{plate_version}/silhouette/{shot}_roto_{plate_name}-outsource_{plate_version}.sfx"
+      folders:
+        - "{sg_plate_name}"
+        - "{out_version}"
+        - "{shot}_roto_{plate_name}-outsource_{plate_version}"
+        - nuke
+        - silhouette

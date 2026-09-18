@@ -1,0 +1,43 @@
+# global.yaml configuration
+cases:
+  1:
+    name: "Standard Overlay + RGB Mattes"
+    overlay: "exr"
+    mattes: "multi_rgb"
+    deliverables: ["silhouette_script", "nuke_script"]
+
+  2:
+    name: "Overlay + Single EXR with RGB splits"
+    overlay: "exr"
+    mattes: "single_rgb"
+    deliverables: ["silhouette_script", "nuke_script"]
+
+  3:
+    name: "Overlay EXR + MOV QC"
+    overlay: ["exr", "mov"]
+    mattes: "multi_rgb"
+    deliverables: ["nuke_script"]
+
+  4:
+    name: "Multiple QC passes (plate, black, grey)"
+    overlay: ["plate_exr", "black_exr", "grey_exr"]
+    mattes: "alpha_merged"
+    deliverables: ["silhouette_script", "nuke_script"]
+
+  5:
+    name: "Overlay Grey/Black + EXR per character"
+    overlay: "exr"
+    mattes: "per_character"
+    deliverables: ["nuke_script"]
+
+  6:
+    name: "QC as MOV + EXR"
+    overlay: ["mov", "exr"]
+    mattes: "alpha_merged"
+    deliverables: ["silhouette_script", "nuke_script"]
+
+  7:
+    name: "No Overlay, only mattes"
+    overlay: "none"
+    mattes: ["multi_rgb", "alpha_merged"]
+    deliverables: ["nuke_script"]

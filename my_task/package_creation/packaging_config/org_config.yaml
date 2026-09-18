@@ -1,0 +1,121 @@
+###########################################
+#      SHOW : ORG
+#############################################
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+source_path: source_path
+plate_name: ""
+new_update: yes
+matte_path_changes: yes
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+extensions:
+  nuke: [.nk]
+  silhouette: [.sfx]
+  text: [.txt, .json, .yml, .yaml, .log]
+
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+tokens:
+  citeo_roto:
+    shot: shot.upper()
+    out_version: out_version
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    plate_name: next((s[i:i+4] for s in reversed(source_path.split('_')) for i in reversed(range(len(s)-3)) if s[i:i+2].isalpha() and s[i+2:i+4].isdigit()), None)
+
+    mb_nmb: ["MB"]
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/"
+
+    # ── only dst needed, src comes from artist UI selection ──────────────────
+    mb_dst_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes/{shot}_roto_{description}_{out_version}/{shot}_roto_{description}_{out_version}.%06d.exr"
+
+    write_node_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes/{shot}_roto_{description}_{out_version}/{shot}_roto_{description}_{out_version}.%06d.exr"
+    exr_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes/"
+
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/scripts/{shot}_roto_{out_version}.nk"
+    dst_path_sx: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/scripts/{shot}_roto_{out_version}.sfx"
+
+    new_update: yes
+    matte_path_changes: yes
+
+    render:
+      run_mb_copy:
+        "key": []
+      sfx_file_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      export_all_shape_one:
+        "key": []
+      create_version_data:
+        "key": []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  ovo7_roto:
+    shot: shot.upper()
+    out_version: out_version
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    plate_name: next((s[i:i+4] for s in reversed(source_path.split('_')) for i in reversed(range(len(s)-3)) if s[i:i+2].isalpha() and s[i+2:i+4].isdigit()), None)
+
+    mb_nmb: ["MB"]
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/"
+
+    # ── only dst needed, src comes from artist UI selection ──────────────────
+    mb_dst_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes/{shot}_roto_{description}_{out_version}/{shot}_roto_{description}_{out_version}.%06d.exr"
+
+    write_node_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes/{shot}_roto_{description}_{out_version}/{shot}_roto_{description}_{out_version}.%06d.exr"
+    exr_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes/"
+
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/scripts/{shot}_roto_{out_version}.nk"
+    dst_path_sx: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/scripts/{shot}_roto_{out_version}.sfx"
+
+    new_update: yes
+    matte_path_changes: yes
+
+    render:
+      run_mb_copy:
+        "key": []
+      create_version_data:
+        "key": []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+project_structure:
+  - org:
+      - citeo:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}":
+                      - "{shot}_roto_{out_version}":
+                          - "mattes":
+                              - "{shot}_roto_{description}_{out_version}": []
+                          - "scripts":
+                              - "{shot}_roto_{out_version}.nk"
+                              - "{shot}_roto_{out_version}.sfx"
+      - ovo7:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}":
+                      - "{shot}_roto_{out_version}":
+                          - "mattes":
+                              - "{shot}_roto_{description}_{out_version}": []

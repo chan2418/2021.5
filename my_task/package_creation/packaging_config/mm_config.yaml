@@ -1,0 +1,719 @@
+##################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+publish_out_path : "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index : 10
+sg_status_list : "pentec"
+source_path : source_path
+sg_plate_name : sg_plate_name #01
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+new_update : yes
+
+
+
+
+
+##################################################### OOU B_cart creative tool path setup #######################################
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke:
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+###################################################### Tokens ###################################################################
+
+tokens:
+
+  db_roto:
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name : ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/" #02
+    exr_path : os.path.join(out_path,out_version,shot,shot+"_basilicflyroto_differenceoverlay_"+out_version+"."+frame_range+"."+extension)
+    mb_nuke_file_template: "{shot}_roto_{plate_name}_tdm.nk"
+
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    mb_nmb: []
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}_plate_{plate_name}_{out_version}/nuke/{shot}_roto_main_{out_version}.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/{shot}_roto_{plate_name}_tdm.sfx #03
+    write_node_path : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/exr/{shot}_roto_{plate_name}_tdm.%04d.exr #04
+    mb_nmb: ["MB"]
+
+    # input_template_mov : "/tools/oou_comptest_colourloop_1_v001.nk"
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+
+      sfx_file_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB"]
+
+      set_value_nkt:
+        "key": []
+      # save_tmp_coloroverlay:
+      #   "key": []
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+
+  cl_roto:
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name: ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/" #02
+    exr_path : os.path.join(out_path,out_version,shot,shot+"_basilicflyroto_differenceoverlay_"+out_version+"."+frame_range+"."+extension)
+    mb_nuke_file_template: "{shot}_roto_{plate_name}_tdm.nk"
+
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    mb_nmb: []
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}_plate_{plate_name}_{out_version}/nuke/{shot}_roto_main_{out_version}.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/{shot}_roto_{plate_name}_tdm.sfx #03
+    write_node_path : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/exr/{shot}_roto_{plate_name}_tdm.%04d.exr #04
+    mb_nmb: ["MB"]
+
+    # input_template_mov : "/tools/oou_comptest_colourloop_1_v001.nk"
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+
+      sfx_file_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB"]
+
+      set_value_nkt:
+        "key": []
+      # save_tmp_coloroverlay:
+      #   "key": []
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+
+  aha_roto:
+    shot: shot.upper()
+    nuke_extend_path: ["Script"]
+    matte_extend_path: ["Render"]
+    matte_naming_convention: "Render"
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name: ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/" #02
+    exr_path : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/ # nuke shape path
+    mb_nuke_file_template: "{shot}-{plate_name}-roto_matteA-{out_version}.nk"
+    mb_folder_template: "{shot}-{sg_plate_name}-roto-{description}_mattemb-{out_version}"
+    nmb_folder_template : "{shot}-{sg_plate_name}-roto-{description}_matte-{out_version}"
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    # nmb_nuke_file_template: "{shot}_roto_mainnmb_{out_version}.nk"
+
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    # mb_nmb: []
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/{shot}-{plate_name}-roto_matteA-{out_version}.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/{shot}-{plate_name}-roto_matteA-{out_version}.sfx #03
+    # write_node_path : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/{shot}_roto_{plate_name}_tdm.%04d.exr #04
+    mb_nmb: ["MB", "NMB"]
+    nmb_blur_remove: True
+
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+      mate_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      sfx_file_copy:
+        "key": []
+      # nuke_shape_export:
+      #   "key": ["MB"]
+      export_all_shape_one:
+        "key": []
+      render_nmb:
+        "key" : ["NMB"]  # want nmb render send the nmb key
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  mkt_roto:
+    shot: shot.upper()
+    nuke_extend_path: ["Script"]
+    matte_extend_path: ["Render"]
+    # matte_naming_convention: "Render"
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name: ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/" #02
+    exr_path : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/ # nuke shape path
+    mb_nuke_file_template: "{shot}-{plate_name}-roto_matteA-{out_version}.nk"
+    mb_folder_template: "{shot}-{sg_plate_name}-roto-{description}_mattemb-{out_version}"
+    nmb_folder_template : "{shot}-{sg_plate_name}-roto-{description}_matte-{out_version}"
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    # nmb_nuke_file_template: "{shot}_roto_mainnmb_{out_version}.nk"
+
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    # mb_nmb: []
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/{shot}-{plate_name}-roto_matteA-{out_version}.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/{shot}-{plate_name}-roto_matteA-{out_version}.sfx #03
+    # write_node_path : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/{shot}_roto_{plate_name}_tdm.%04d.exr #04
+    mb_nmb: ["MB", "NMB"]
+    nmb_blur_remove: True
+
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+      mate_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      sfx_file_copy:
+        "key": []
+      # nuke_shape_export:
+      #   "key": ["MB"]
+      export_all_shape_one:
+        "key": []
+      render_nmb:
+        "key" : ["NMB"]  # want nmb render send the nmb key
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+  lan_roto:
+    out_version: out_version
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    plate_name: ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/"
+    exr_path: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/exr/{shot}_roto_{plate_name}_{out_version}_tdm.%04d.exr
+    mb_nuke_file_template: "{shot}_roto_{plate_name}_{out_version}_tdm.nk"
+    mb_folder_template: "{shot}_roto_{plate_name}_{out_version}_tdm"
+
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.nk # nuke shape path
+    # nuke_color_overlay_file: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.nk
+    dst_path_sx: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.sfx
+    write_node_path: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/exr/{shot}_roto_{plate_name}_{out_version}_tdm.%04d.exr
+    mb_nmb: ["MB"]
+    matte_naming_convention: ""
+    nuke_extend_path: []
+    silhouette_extend_path: []
+    matte_extend_path: ["exr"]
+    render:
+      mate_copy:
+        "key": []
+      sfx_file_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB"]
+      set_value_nkt:
+        "key": []
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+
+
+  tlmp_roto:
+    shot: shot.upper()
+    nuke_extend_path: ["Script"]
+    matte_extend_path: ["Render"]
+    # matte_naming_convention: "Render"
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name: ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/" #02
+    exr_path : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/ # nuke shape path
+    mb_nuke_file_template: "{shot}-{plate_name}-roto_matteA-{out_version}.nk"
+    mb_folder_template: "{shot}-{sg_plate_name}-roto-{description}_mattemb-{out_version}"
+    nmb_folder_template : "{shot}-{sg_plate_name}-roto-{description}_matte-{out_version}"
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    # mb_nmb: []
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/{shot}-{plate_name}-roto_matteA-{out_version}.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Script/{shot}-{plate_name}-roto_matteA-{out_version}.sfx #03
+    # write_node_path : /{sg_plate_name}/{out_version}/{shot}-{plate_name}-roto-{out_version}/Render/{shot}_roto_{plate_name}_tdm.%04d.exr #04
+    mb_nmb: ["MB", "NMB"]
+    nmb_blur_remove: True
+
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+      mate_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      sfx_file_copy:
+        "key": []
+      # nuke_shape_export:
+      #   "key": ["MB"]
+      export_all_shape_one:
+        "key": []
+      render_nmb:
+        "key" : ["NMB"]  # want nmb render send the nmb key
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  hnd2_roto:
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name : ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    shot: ("_".join(os.path.basename(source_path).split("_")[:3]))
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/" #02
+    exr_path : os.path.join(out_path,out_version,shot,shot+"_basilicflyroto_differenceoverlay_"+out_version+"."+frame_range+"."+extension)
+    mb_nuke_file_template: "{shot}_roto_{plate_name}_tdm.nk"
+
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template_v2.nk"
+    mb_nmb: []
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.nk # nuke shape path
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.sfx #03
+    write_node_path : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/exr/{shot}_roto_{plate_name}_{out_version}_tdm.%04d.exr #04
+    # mb_nmb: ["MB"]
+
+    # input_template_mov : "/tools/oou_comptest_colourloop_1_v001.nk"
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      sfx_file_copy:
+        "key": []
+      set_value_nkt:
+        "key": []
+      export_all_shape_one:
+        "key": []
+      # save_tmp_coloroverlay:
+      #   "key": []
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  db3_roto:
+    out_version: out_version
+    frame_range : os.path.basename(source_path).split(".")[1]
+    extension : os.path.basename(source_path).split(".")[-1]
+    plate_name : ("_".join(source_path.split("_")[-4:-1]).split(".")[0])
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/" #02
+    exr_path : os.path.join(out_path,out_version,shot,shot+"_basilicflyroto_differenceoverlay_"+out_version+"."+frame_range+"."+extension)
+    mb_nuke_file_template: "{shot}_roto_{plate_name}_tdm.nk"
+    mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template_v2.nk"
+    mb_nmb: []
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.nk # nuke shape path
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.nk #04
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/{shot}_roto_{plate_name}_{out_version}_tdm.sfx #03
+    write_node_path : /{sg_plate_name}/{out_version}/{shot}_roto_{plate_name}_{out_version}_tdm/exr/{shot}_roto_{plate_name}_{out_version}_tdm.%04d.exr #04
+    # mb_nmb: ["MB"]
+
+    # input_template_mov : "/tools/oou_comptest_colourloop_1_v001.nk"
+    render :
+      render_list:
+        exr_file_path : "{exr_path}"
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      sfx_file_copy:
+        "key": []
+      set_value_nkt:
+        "key": []
+      export_all_shape_one:
+        "key": []
+      # save_tmp_coloroverlay:
+      #   "key": []
+      create_version_data:
+        "key": []
+      nuke_template_context_data :
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  mixa_roto:
+    # ui : True
+    matte_extend_path: ["mattes"]
+    shot: shot.upper()
+    out_version: ("v" + out_version.replace("v", ""))
+    # plate_version: ("v" + os.path.basename(source_path).split(".")[2].replace("v", "").zfill(3))
+    plate_version: ("v" + os.path.basename(source_path).split(".")[2].replace("v", "").zfill(3))
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    plate_name: next((s[i:i+4] for s in reversed(source_path.split('_')) for i in reversed(range(len(s)-3)) if s[i:i+2].isalpha() and s[i+2:i+4].isdigit()), None)
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/mattes" #02
+    # exr_path : "os.path.join(out_path,sg_plate_name,out_version,shot+'_plate_'+plate_name+'_'+out_version,shot+'_plate_'+plate_name+'_roto_rotomain01_'+out_version,shot+'_plate_'+plate_name+'_roto_rotomain01_'+out_version+'.%04d.exr')"
+    exr_path: /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}
+    # mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/nuke_mate_snippet_mxp.nk"}
+    mb_folder_template: "{shot}_roto_{description}_{out_version}"
+    # matte_folder: True
+    # nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_dst.nk"
+    mb_nmb: ["MB"]
+    # nuke_color_overlay_file : "os.path.join(out_path,sg_plate_name+out_version,shot+'_plate_'+plate_name+'_'+out_version,'nuke',shot+'_roto_main_'+out_version+'.nk')" #06
+    nuke_color_overlay_file: /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/scripts/nuke/{shot}_roto_{out_version}.nk
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/scripts/silhouette/{shot}_roto_{out_version}.sfx
+    # write_node_path : /{sg_plate_name}/{out_version}/{shot}.{sg_plate_name}.{plate_version}.roto_taskA.{out_version}/{shot}.{sg_plate_name}.{plate_version}.roto_overlay_taskA.{out_version}/{shot}.{sg_plate_name}.{plate_version}.roto_overlay_taskA.{out_version}.%04d.exr #04
+    # write_node_path_matte : /{sg_plate_name}/{out_version}/{shot}.{sg_plate_name}.{plate_version}.roto_taskA.{out_version}/{shot}.{sg_plate_name}.{plate_version}.roto_mattes_taskA.{out_version}/{shot}.{sg_plate_name}.{plate_version}.roto_mattes_taskA.{out_version}.%04d.exr
+    # additional_write_path: ["write_node_path_matte"]
+    # nuke_client_file: /tools/bpipe/config/coloroverlay_template/nuke_color_overlay_shape_dst.nk
+    # write_node_path : "os.path.join(out_path,sg_plate_name+out_version,shot+'_plate_'+plate_name+'_'+out_version,shot+'_plate_'+plate_name+'_roto_rotomain01_'+out_version,shot+'_plate_'+plate_name+'_roto_rotomain01_'+out_version+'.%04d.exr')"
+    matte_path_split:
+      file_name: "file_name.split('_')[-2]"
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      mate_copy:
+        "key": []
+      sfx_file_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      export_all_shape_one:
+        "key": []
+
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+  # ===========================================================================
+  # LCDM  –  Rotoscoping delivery (project: mm_lcdm)
+  #
+  #   {date}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{ver}/
+  #     ├── lcdm_{shot}_{plate}_{shape}_{ver}/
+  #     │   └── lcdm_{shot}_{plate}_{shape}_{ver}.####.exr
+  #     └── lcdm_{shot}_{plate}_work_files_{ver}/.nk .sfx
+  #
+  # Package is the "shot-level" folder under version (like mixa/aha) so shape
+  # folders inject as siblings of work_files — NOT re-nested as
+  # package/lcdm_shot/package/. Date + shot path live in the structure key
+  # (slashes → makedirs creates intermediate dirs).
+  # ===========================================================================
+  lcdm_roto:
+    project_code: "lcdm"
+    # shot code only — strip project prefix if SG shot is "lcdm_...."
+    shot: (shot.lower()[5:] if str(shot).lower().startswith("lcdm_") else shot.lower())
+    date_yymmdd: (date_folder.split("_")[1][2:])
+    out_version: out_version
+    frame_range: os.path.basename(str(source_path)).split(".")[1]
+    extension: os.path.basename(str(source_path)).split(".")[-1]
+    plate: next((p for p in os.path.basename(str(source_path)).split(".")[0].split("_") if p.lower().startswith("plate")), "plate001")
+    plate_name: next((p for p in os.path.basename(str(source_path)).split(".")[0].split("_") if p.lower().startswith("plate")), "plate001")
+    # Ends at package root (shape folders sit directly under this)
+    project_base_path: "/{sg_plate_name}/{out_version}/{date_yymmdd}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{out_version}/"
+    # Per-shape folder + file stem (description = shape name e.g. matte01)
+    mb_folder_template: "lcdm_{shot}_{plate}_{description}_{out_version}"
+    # Empty: inject shapes into package (shot-level) contents as siblings of work_files
+    # Do NOT list lcdm_{shot} / package here — that re-creates them inside the package
+    matte_extend_path: []
+    # Work files
+    nuke_extend_path: ["lcdm_{shot}_{plate}_work_files_{out_version}"]
+    silhouette_extend_path: ["lcdm_{shot}_{plate}_work_files_{out_version}"]
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{date_yymmdd}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{out_version}/lcdm_{shot}_{plate}_work_files_{out_version}/
+    mb_nuke_file_template: "lcdm_{shot}_{plate}_roto_{out_version}.nk"
+    nuke_file_name: "lcdm_{shot}_{plate}_roto_{out_version}.nk"
+    # Destination for export_all_shape_one (combined .nk with all roto shapes)
+    # NOT a color-overlay QC script — LCDM has no coloroverlay process
+    nuke_color_overlay_file: /{sg_plate_name}/{out_version}/{date_yymmdd}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{out_version}/lcdm_{shot}_{plate}_work_files_{out_version}/lcdm_{shot}_{plate}_roto_{out_version}.nk
+    dst_path_sx: /{sg_plate_name}/{out_version}/{date_yymmdd}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{out_version}/lcdm_{shot}_{plate}_work_files_{out_version}/lcdm_{shot}_{plate}_roto_{out_version}.sfx
+    exr_path: /{sg_plate_name}/{out_version}/{date_yymmdd}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{out_version}/
+    mb_nmb: ["MB"]
+    # No set_value_nkt / nuke_coloroverlay_template / write_node_path / mate_snippet
+    # — LCDM client delivery does not use color-overlay QC
+    render_list:
+      exr_file_path: "{exr_path}"
+    render:
+      mate_copy:
+        "key": []
+      sfx_file_copy:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      export_all_shape_one:
+        "key": []
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+
+  psd_roto:
+    shot: shot.upper()
+    out_version: ("v" + str(out_version).lower().replace("v", "").zfill(3))
+    frame_range: os.path.basename(source_path).split(".")[1]
+    extension: os.path.basename(source_path).split(".")[-1]
+    plate_name: sg_plate_name
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Render/"
+    exr_path: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Render/"
+    matte_extend_path: ["Render"]
+    matte_naming_convention: "Render"
+    nuke_extend_path: ["Script"]
+    silhouette_extend_path: ["Script"]
+    nuke_full_shpae_path: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Script/"
+    mb_folder_template: "{shot}-{sg_plate_name}-roto-{description}_mattemb-{out_version}"
+    nmb_folder_template: "{shot}-{sg_plate_name}-roto-{description}_matte-{out_version}"
+    mb_dst_path: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Render/{shot}-{sg_plate_name}-roto-{description}_mattemb-{out_version}/{shot}-{sg_plate_name}-roto-{description}_mattemb-{out_version}.%04d.exr"
+    nmb_dst_path: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Render/{shot}-{sg_plate_name}-roto-{description}_matte-{out_version}/{shot}-{sg_plate_name}-roto-{description}_matte-{out_version}.%04d.exr"
+    mb_nuke_file_template: "{shot}-{sg_plate_name}-roto-matteA-{out_version}.nk"
+    nuke_file_name: "{shot}-{sg_plate_name}-roto-matteA-{out_version}.nk"
+    nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _template.nk"
+    mate_snippet: {"matte_snippet_path": "/tools/bpipe/config/coloroverlay_template/MM_DB & MM_CL _matte_snipet.nk"}
+    nuke_color_overlay_file: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Script/{shot}-{sg_plate_name}-roto-matteA-{out_version}.nk"
+    dst_path_sx: "/{sg_plate_name}/{out_version}/{shot}-{sg_plate_name}-roto-{out_version}/Script/{shot}-{sg_plate_name}-roto-matteA-{out_version}.sfx"
+    mb_nmb: ["MB", "NMB"]
+    nmb_blur_remove: True
+    new_update: yes
+    matte_path_changes: yes
+
+    render:
+      render_list:
+        exr_file_path: "{exr_path}"
+      run_mb_copy:
+        "key": []
+      run_nmb_render:
+        "key": []
+      nuke_shape_export:
+        "key": ["MB_BKP"]
+      sfx_file_copy:
+        "key": []
+      export_all_shape_one:
+        "key": []
+      create_version_data:
+        "key": []
+      nuke_template_context_data:
+        MB_matte_path:
+          Read1: []
+          Read2: []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+
+
+
+
+
+
+
+
+
+################################################### folder Structure ############################################################
+
+project_structure:
+
+  - mm:
+    - db:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}_roto_{plate_name}_tdm":
+                - "exr": []
+                - "{shot}_roto_{plate_name}_tdm.sfx"
+
+    - cl:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}_roto_{plate_name}_tdm":
+                - "exr": []
+                - "{shot}_roto_{plate_name}_tdm.sfx"
+
+    - aha:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}-{plate_name}-roto-{out_version}":
+                - "Render": []
+                - "Script":
+                  - "{shot}-{plate_name}-roto_matteA-{out_version}.sfx"
+                  - "{shot}-{plate_name}-roto_matteA-{out_version}.nk"
+
+    - mkt:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}-{plate_name}-roto-{out_version}":
+                - "Render": []
+                - "Script":
+                  - "{shot}-{plate_name}-roto_matteA-{out_version}.sfx"
+                  - "{shot}-{plate_name}-roto_matteA-{out_version}.nk"
+
+    - tlmp:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}-{plate_name}-roto-{out_version}":
+                - "Render": []
+                - "Script":
+                  - "{shot}-{plate_name}-roto_matteA-{out_version}.sfx"
+                  - "{shot}-{plate_name}-roto_matteA-{out_version}.nk"
+
+
+
+    - lan:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}_roto_{plate_name}_{out_version}_tdm":
+                - "exr": []
+                - "{shot}_roto_{plate_name}_{out_version}_tdm.sfx"
+                - "{shot}_roto_{plate_name}_{out_version}_tdm.nk"
+
+
+    - hnd2:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}_roto_{plate_name}_{out_version}_tdm":
+                - "exr": []
+                - "{shot}_roto_{plate_name}_{out_version}_tdm.nk"
+                - "{shot}_roto_{plate_name}_{out_version}_tdm.sfx"
+    - db3:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}_roto_{plate_name}_{out_version}_tdm":
+                - "exr": []
+                - "{shot}_roto_{plate_name}_{out_version}_tdm.nk"
+                - "{shot}_roto_{plate_name}_{out_version}_tdm.sfx"
+
+
+    - mixa:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}_roto_{out_version}":
+                - "mattes" : []
+                - "scripts" :
+                  - "nuke" :
+                    - "{shot}_roto_v001.nk"
+                  - "silhouette" :
+                    - "{shot}_roto_v001.sfx"
+
+    # LCDM delivery (mm_lcdm)
+    # Package is the shot-level key under version (slashes create date/shot dirs).
+    # Shape folders are injected next to work_files via mb_folder_template
+    # (matte_extend_path empty — do not re-nest lcdm_shot/package).
+    #
+    #   {date}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{ver}/
+    #     ├── lcdm_{shot}_{plate}_{shape}_{ver}/....exr
+    #     └── lcdm_{shot}_{plate}_work_files_{ver}/.nk .sfx
+    - lcdm:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{date_yymmdd}/lcdm_{shot}/lcdm_{shot}_{plate}_roto_{out_version}":
+                - "lcdm_{shot}_{plate}_work_files_{out_version}":
+                  - "lcdm_{shot}_{plate}_roto_{out_version}.nk"
+                  - "lcdm_{shot}_{plate}_roto_{out_version}.sfx"
+
+    - psd:
+      - roto:
+          - "{sg_plate_name}":
+            - "{out_version}":
+              - "{shot}-{sg_plate_name}-roto-{out_version}":
+                - "Render": []
+                - "Script":
+                  - "{shot}-{sg_plate_name}-roto-matteA-{out_version}.sfx"
+                  - "{shot}-{sg_plate_name}-roto-matteA-{out_version}.nk"
+
+
+
+
+
+
+

@@ -1,0 +1,35 @@
+show: mxp
+
+tokens:
+  shot: "{shot}"
+  sg_plate_name: "{sg_plate_name}"
+  plate_name: "{plate_name}"
+  out_version: "{out_version}"
+
+cases:
+  clh:
+    roto:
+      nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_mxp.nk"
+      mate_snippet : {"matte_snippet_path":"/tools/bpipe/config/coloroverlay_template/nuke_mate_snippet_mxp.nk"}
+      folders:
+        - "{sg_plate_name}":
+          - "{out_version}":
+            - "{shot}_roto_{sg_plate_name}_{out_version}_bac":
+              - data:
+                - "{shot}_roto_{sg_plate_name}_{out_version}_bac.nk"
+                - "{shot}_roto_{sg_plate_name}_{out_version}_bac.sfx"
+              - render:
+                - "{shot}_roto_{sg_plate_name}_{out_version}_bac.%04d.exr"
+
+  dm2:
+    roto:
+      nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_mxp.nk"
+      folders:
+        - "{sg_plate_name}":
+          - "{out_version}":
+            - "{shot}_roto_{sg_plate_name}_{out_version}_bac":
+              - data:
+                - "{shot}_roto_{sg_plate_name}_{out_version}_bac.nk"
+                - "{shot}_roto_{sg_plate_name}_{out_version}_bac.sfx"
+              - render:
+                - "{shot}_roto_{sg_plate_name}_{out_version}_bac.%04d.exr"

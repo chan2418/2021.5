@@ -1,0 +1,98 @@
+##################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+sg_plate_name : sg_plate_name #01
+
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path : "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index : 10
+sg_status_list : "pentec"
+source_path : os.path.basename(source_path)
+new_update : yes
+
+##################################################### FT B_cart creative tool path setup #######################################
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke: 
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+###################################################### Tokens ###################################################################
+
+
+
+tokens:  
+  
+  hs_roto:
+    shot : shot.upper()
+    nuke_extend_path: ["nuke"]
+    silhouette_extend_path : []
+    matte_extend_path : []
+    nuke_full_shpae_path : /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/nuke/ # nuke shape path
+    out_version: out_version
+    resolution : input_path.split("/")[-2]
+    frame_range : os.path.basename(input_path).split(".")[1]
+    extension : os.path.basename(input_path).split(".")[-1]
+    plate_name : source_path.split(".")[0].split("_")[-2].upper()
+    exr_file_name : os.path.basename(input_path)
+    nuke_file_name : "{shot}_roto_{out_version}.nk"
+    mb_folder_template : "{shot}_roto_{description}_{out_version}"
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/" #02
+    mb_nuke_file_template: "{shot}_roto_{out_version}.nk"
+    exr_path : /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/
+    # nuke_coloroverlay_template: "/tools/bpipe/config/coloroverlay_template/nuke_color_overlay_ft.nk"
+    nuke_color_overlay_file : /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/nuke/{shot}_roto_{out_version}.nk #04
+    mb_nmb: ["MB"]
+    # input_template_mov : "/tools/oou_comptest_colourloop_1_v001.nk"
+    dst_path_sx : /{sg_plate_name}/{out_version}/{shot}_roto_{out_version}/sfx/{shot}_{out_version}.sfx
+    # write_node_path : /{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_{out_version}/matteimage_{shot}_roto_roto_default_{sg_plate_name}Rubylith_primary_{out_version}_main/matteimage_{shot}_roto_roto_default_{sg_plate_name}Rubylith_primary_{out_version}_main.%04d.exr #04
+    # render_list:
+      # exr_file_path : "{exr_path}"
+    render :
+      mate_copy: 
+        "key": []
+      nuke_shape_export:
+        "key": ["MB"]
+      sfx_file_copy:
+        "key": []
+      create_version_data:
+        "key": []
+    nuke_template_context_data :
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+
+################################################### folder Structure ############################################################
+
+project_structure:
+
+  - arc:
+    - hs:                              
+      - roto:
+        - "{sg_plate_name}":                                      
+          - "{out_version}": #04
+            - "{shot}_roto_{out_version}":
+              - "nuke": []
+              - "sfx":
+                - "{shot}_{out_version}.sfx"

@@ -1,0 +1,76 @@
+##################################################### Show Init Setup ###########################################################
+
+out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'dept','upload',department)"
+roto_out_path: "os.path.join(os.path.dirname(input_path).split('dept')[0],'dept','upload',department)"
+sg_plate_name: sg_plate_name #01
+
+roto_main_out: "os.path.join(os.path.dirname(input_path).split('dept')[0],'out',department)"
+publish_out_path: "os.path.join(os.path.dirname(input_path).split('in')[0],'out')"
+color_space_index: 10
+sg_status_list: "pentec"
+source_path: os.path.basename(source_path)
+new_update: yes
+
+##################################################### 19T B_cart creative tool path setup #######################################
+
+paths:
+  nuke: /apps/nuke/Nuke14.0v6/Nuke14.0
+  silhouette: /usr/local/silhouette/silhouette
+  text: xdg-open
+  rv: /apps/rv-centos7-2023.0.1/bin/rv
+
+# File extensions configuration
+extensions:
+  nuke:
+    - .nk
+  silhouette:
+    - .sfx
+  text:
+    - .txt
+    - .json
+    - .yml
+    - .yaml
+    - .log
+
+# Other configuration settings
+settings:
+  default_cache_dir: ~/nuke_cache
+  thumbnail_format: jpeg
+
+###################################################### Tokens ###################################################################
+tokens:
+  hs2_roto:
+    nuke_extend_path: []
+    silhouette_extend_path: []
+    matte_extend_path: []
+    matte_naming_convention: ""
+    nuke_full_shpae_path: /{sg_plate_name}/{out_version}/{shot}_matte_{out_version}/scripts/nuke/
+    out_version: out_version
+    resolution: input_path.split("/")[-2]
+    frame_range: os.path.basename(input_path).split(".")[1]
+    extension: os.path.basename(input_path).split(".")[-1]
+    plate_name: source_path.split(".")[0].split("_")[-2].upper()
+    mb_folder_template: "{shot}_matte_{out_version}"
+    project_base_path: "/{sg_plate_name}/{out_version}/{shot}_{sg_plate_name}_roto_{out_version}/"
+    exr_path: /{sg_plate_name}/{out_version}/{shot}_matte_{out_version}/{shot}_matte_{out_version}.%04d.exr
+    mb_nmb: ["MB"]
+    matte_extension: "mov"
+    render:
+      mate_nuke_set:
+        "key": ["/tools/bpipe/config/matte_template/ffp_matte_template.nk"]
+      create_version_data:
+        "key": []
+    nuke_template_context_data:
+      MB_matte_path:
+        Read1: []
+        Read2: []
+
+#############################################################################################################################
+
+project_structure:
+  - ffp:
+      - hs2:
+          - roto:
+              - "{sg_plate_name}":
+                  - "{out_version}":
+                      - "{shot}_{out_version}": []

@@ -1,0 +1,30 @@
+{
+    "mattes": [
+        {
+            "name": "CSMT_read_1",
+            "red": [],
+            "green": [
+                "CSMT_read_1_green",
+                "CSMT_read_1_green_alpha",
+                "Copy44",
+                "Grade23",
+                "Premult23",
+                "Merge23",
+                "CSMT_read_1_green_alpha_Copy"
+            ],
+            "blue": []
+        },
+        {
+            "name": "CSMT_read_2",
+            "red": [],
+            "green": [],
+            "blue": []
+        },
+        {
+            "name": "CSMT_read_3",
+            "red": [],
+            "green": [],
+            "blue": []
+        }
+    ]
+}
